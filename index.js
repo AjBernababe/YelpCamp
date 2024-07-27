@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 import express from "express";
 import methodOverride from "method-override";
-import path from 'path';
-import { fileURLToPath } from 'url';
+import ejsMate from "ejs-mate"
+import path from "path";
+import { fileURLToPath } from "url";
 
 import Campground from "./models/campground.js";
 
@@ -21,6 +22,9 @@ const __dirname = path.dirname(__filename)
 
 const app = express();
 
+//EJS Engine
+app.engine('ejs', ejsMate)
+
 //EJS/Route Set up
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
@@ -29,11 +33,12 @@ app.set('views', path.join(__dirname, 'views'))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 //#region Routes
 //Home
 app.get('/', (req, res) => {
-    res.send('Welcome to YelpCamp')
+    res.render('index')
 })
 
 //Show all campgrounds
@@ -47,7 +52,7 @@ app.get('/campgrounds/new', (req, res) => {
     res.render('campgrounds/new')
 })
 app.post('/campgrounds', async (req, res) => {
-    const campground = new Campground(req.body)
+    const campground = new Campground(req.body.campground)
     await campground.save()
     res.redirect(`/campgrounds/${campground.id}`)
 })
@@ -67,7 +72,7 @@ app.get('/campgrounds/:id/edit', async (req, res) => {
 })
 app.put('/campgrounds/:id', async (req, res) => {
     const { id } = req.params
-    await Campground.findByIdAndUpdate(id, req.body)
+    await Campground.findByIdAndUpdate(id, req.body.campground)
     res.redirect(`/campgrounds/${id}`)
 })
 

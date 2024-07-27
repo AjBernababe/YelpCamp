@@ -4,9 +4,10 @@ const { Schema, model } = mongoose;
 
 const CampgroundSchema = new Schema({
     title: String,
-    price: String,
+    price: Number,
     description: String,
-    location: String
+    location: String,
+    image: String
 });
 
 export default model('Campground', CampgroundSchema);

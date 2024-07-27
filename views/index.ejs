@@ -1,0 +1,86 @@
+<% layout('layouts/boilerplate.ejs') %>
+<!-- Hero Section -->
+<header class="bg-dark text-white text-center py-5">
+  <div class="container">
+    <h1 class="display-4">Welcome to My Professional Portfolio</h1>
+    <p class="lead">Showcasing my skills and projects with elegance and simplicity.</p>
+    <a href="#contact" class="btn btn-light btn-lg">Get in Touch</a>
+  </div>
+</header>
+
+<!-- Main Content -->
+<main>
+  <!-- About Section -->
+  <section id="about" class="py-5">
+    <div class="container">
+      <h2 class="text-center mb-4">About Me</h2>
+      <p class="text-center lead">
+        I am a web developer with a passion for creating dynamic and user-friendly web experiences. With
+        expertise in modern technologies and frameworks, I deliver solutions that are both effective and
+        visually appealing.
+      </p>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="bg-light py-5">
+    <div class="container">
+      <h2 class="text-center mb-4">Features</h2>
+      <div class="row text-center">
+        <div class="col-lg-4 mb-4">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body">
+              <h3 class="card-title">Feature One</h3>
+              <p class="card-text">Detail about this feature, explaining its benefits and relevance.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 mb-4">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body">
+              <h3 class="card-title">Feature Two</h3>
+              <p class="card-text">Detail about this feature, explaining its benefits and relevance.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 mb-4">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body">
+              <h3 class="card-title">Feature Three</h3>
+              <p class="card-text">Detail about this feature, explaining its benefits and relevance.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="py-5">
+    <div class="container">
+      <h2 class="text-center mb-4">Contact Me</h2>
+      <form action="#" method="post">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" id="name" name="name" class="form-control" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" name="email" class="form-control" required>
+          </div>
+          <div class="col-12 mb-3">
+            <label for="message" class="form-label">Message</label>
+            <textarea id="message" name="message" class="form-control" rows="5" required></textarea>
+          </div>
+          <div class="col-12">
+            <button type="submit" class="btn btn-dark btn-lg">Send Message</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+</main>
