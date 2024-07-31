@@ -1,20 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>YelpCamp</title>
 
-    <link rel="stylesheet" href="/css/bootstrap.min.css" />
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YelpCamp</title>
 
-  <body class="d-flex flex-column min-vh-100">
-    <%- include('../partials/navbar.ejs') %>
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+</head>
 
-    <main class="container mt-5"><%- body %></main>
+<body class="d-flex flex-column min-vh-100">
+  <%- include('../partials/navbar.ejs') %>
 
-    <%- include('../partials/footer.ejs') %>
+  <main class="container mt-5"><%- body %></main>
 
-    <script src="/javascript/bootstrap.bundle.min.js"></script>
-  </body>
+  <%- include('../partials/footer.ejs') %>
+
+  <script src="/javascript/bootstrap.bundle.min.js"></script>
+
+
+  <script>
+    (() => {
+      'use strict'
+
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      const forms = document.querySelectorAll('.needs-validation')
+
+      // Loop over them and prevent submission
+      Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+
+          form.classList.add('was-validated')
+        }, false)
+      })
+    })()
+  </script>
+
+</body>
+
 </html>
