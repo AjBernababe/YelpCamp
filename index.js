@@ -6,6 +6,7 @@ import path from "path";
 
 //Models
 import Campground from "./models/campground.js";
+
 //Models Validator
 import { validate } from "./utils/validateSchema.js";
 
@@ -49,7 +50,7 @@ const validateSchema = (req, res, next) => {
     next();
 }
 
-//Middleware
+//Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
