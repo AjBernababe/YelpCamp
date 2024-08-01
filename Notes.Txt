@@ -1,0 +1,1 @@
+catchAsync is a function container to catch asynchronus errors.

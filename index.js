@@ -2,14 +2,14 @@ import mongoose from "mongoose";
 import express from "express";
 import methodOverride from "method-override";
 import ejsMate from "ejs-mate"
-import Joi from "joi";
 import path from "path";
-import { fileURLToPath } from "url";
 
 //Models
 import Campground from "./models/campground.js";
+//Models Validator
+import { validate } from "./utils/validateSchema.js";
 
-//Error Handler
+//Error Handling helpers
 import { ExpressError } from "./utils/ExpressError.js";
 import { catchAsync } from "./utils/catchAsync.js";
 
@@ -22,18 +22,32 @@ async function main() {
 }
 //#endregion
 
-//Dynamic Path
+//#region __dirname workaround
+import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+//#endregion
 
 const app = express();
-
-//EJS Engine
-app.engine('ejs', ejsMate)
 
 //EJS/Route Set up
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
+
+//EJS Engines
+app.engine('ejs', ejsMate)
+
+//Middleware functions
+const validateSchema = (req, res, next) => {
+    const { error } = validate.campgroundSchema.validate(req.body)
+
+    if (error) {
+        const msg = error.details.map(err => err.message).join(',');
+        throw new ExpressError(msg, 404);
+    }
+
+    next();
+}
 
 //Middleware
 app.use(express.json());
@@ -48,28 +62,17 @@ app.get('/', (req, res) => {
 })
 
 //Show all campgrounds
-app.get('/campgrounds', async (req, res) => {
+app.get('/campgrounds', catchAsync(async (req, res, next) => {
     const campgrounds = await Campground.find({})
     res.render('campgrounds/index', { campgrounds })
-})
+}))
 
 //Create new campground
 app.get('/campgrounds/new', (req, res) => {
     res.render('campgrounds/new')
 })
 //
-app.post('/campgrounds', catchAsync(async (req, res, next) => {
-    const campgroundSchema = Joi.object({
-        campground: Joi.object({
-            title: Joi.string().required(),
-            price: Joi.number().required().min(0),
-            description: Joi.string().required(),
-            location: Joi.string().required(),
-            image: Joi.string().required(),
-        }).required()
-    })
-    const result = campgroundSchema.validate(req.body)
-
+app.post('/campgrounds', validateSchema, catchAsync(async (req, res, next) => {
     const campground = new Campground(req.body.campground)
     await campground.save()
     res.redirect(`/campgrounds/${campground.id}`)
@@ -89,7 +92,7 @@ app.get('/campgrounds/:id/edit', catchAsync(async (req, res, next) => {
     res.render('campgrounds/edit', { campground })
 }))
 //
-app.put('/campgrounds/:id', catchAsync(async (req, res, next) => {
+app.put('/campgrounds/:id', validateSchema, catchAsync(async (req, res, next) => {
     const { id } = req.params
     await Campground.findByIdAndUpdate(id, req.body.campground)
     res.redirect(`/campgrounds/${id}`)
@@ -102,15 +105,16 @@ app.delete('/campgrounds/:id', async (req, res) => {
     res.redirect('/campgrounds')
 })
 
-app.all('*', (req, res, next) => {
-    next(new ExpressError("Page not Found!", 404))
+//404 NOT FOUND
+app.all('*', (req, res) => {
+    res.status(404).render('404');
 })
 //#endregion
 
 //Error Handler
 app.use((err, req, res, next) => {
     const { status = 500, message = "Something went wrong." } = err
-    res.status(status).render('error')
+    res.status(status).render('error', { message })
 })
 
 //Port

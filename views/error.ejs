@@ -1,10 +1,20 @@
 <% layout('layouts/boilerplate.ejs') %>
-<div class="alert alert-danger" role="alert">
-  <h4 class="alert-heading">Error!</h4>
-  <p>
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem dignissimos
-    illo necessitatibus iste quo velit atque. Sapiente culpa laboriosam autem fugit
-    earum quidem, voluptate, soluta sit, non dicta velit aut?
-  </p>
-  <p class="mb-0">Zzzzzzzzzzzzzzzzzz</p>
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <!-- Error Alert -->
+      <div class="alert alert-danger text-center" role="alert">
+        <h1 class="display-4">Oops!</h1>
+        <h4 class="alert-heading"><%= message %></h4>
+        <p class="lead">
+          Something went wrong. We apologize for the inconvenience.
+        </p>
+        <hr>
+        <p class="mb-0">
+          Please try again later, or contact our support team if the problem persists.
+        </p>
+        <a href="/campgrounds" class="btn btn-primary mt-3">View campgrounds</a>
+      </div>
+    </div>
+  </div>
 </div>
