@@ -113,8 +113,7 @@ app.all('*', (req, res) => {
 
 //Error Handler
 app.use((err, req, res, next) => {
-    const { status = 500, message = "Something went wrong." } = err
-    res.status(status).render('error', { message })
+    res.status(err.status = 500).render('error', { err })
 })
 
 //Port
