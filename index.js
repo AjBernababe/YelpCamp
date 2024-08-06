@@ -9,7 +9,10 @@ import Campground from "./models/campground.js";
 import Review from "./models/reviews.js";
 
 //Models Validator
-import { validate } from "./utils/validateSchema.js";
+import {
+  validateCampgroundSchema,
+  validateReviewSchema,
+} from "./utils/validateSchema.js";
 
 //Error Handling helpers
 import { ExpressError } from "./utils/ExpressError.js";
@@ -40,8 +43,21 @@ app.set("views", path.join(__dirname, "views"));
 app.engine("ejs", ejsMate);
 
 //Middleware functions
-const validateSchema = (req, res, next) => {
-  const { error } = validate.campgroundSchema.validate(req.body);
+const validateCampground = (req, res, next) => {
+  const { error } = validateCampgroundSchema.campgroundSchema.validate(
+    req.body
+  );
+
+  if (error) {
+    const msg = error.details.map((err) => err.message).join(",");
+    throw new ExpressError(msg, 404);
+  }
+
+  next();
+};
+
+const validateReview = (req, res, next) => {
+  const { error } = validateReviewSchema.reviewSchema.validate(req.body);
 
   if (error) {
     const msg = error.details.map((err) => err.message).join(",");
@@ -79,7 +95,7 @@ app.get("/campgrounds/new", (req, res) => {
 //
 app.post(
   "/campgrounds",
-  validateSchema,
+  validateCampground,
   catchAsync(async (req, res, next) => {
     const campground = new Campground(req.body.campground);
     await campground.save();
@@ -92,7 +108,7 @@ app.get(
   "/campgrounds/:id",
   catchAsync(async (req, res, next) => {
     const { id } = req.params;
-    const campground = await Campground.findById(id);
+    const campground = await Campground.findById(id).populate("reviews");
     res.render("campgrounds/show", { campground });
   })
 );
@@ -109,7 +125,7 @@ app.get(
 //
 app.put(
   "/campgrounds/:id",
-  validateSchema,
+  validateCampground,
   catchAsync(async (req, res, next) => {
     const { id } = req.params;
     await Campground.findByIdAndUpdate(id, req.body.campground);
@@ -124,15 +140,32 @@ app.delete("/campgrounds/:id", async (req, res) => {
   res.redirect("/campgrounds");
 });
 
-//Reviews
+//Create Review
 app.post(
   "/campgrounds/:id/review",
+  validateReview,
   catchAsync(async (req, res, next) => {
     const { id } = req.params;
     const campground = await Campground.findById(id);
-    const review = new Review(req.body);
+    const review = new Review(req.body.review);
 
-    // campground.reviews.push(review);
+    campground.reviews.push(review);
+    campground.save();
+    review.save();
+
+    res.redirect(`/campgrounds/${id}`);
+  })
+);
+
+//Delete Review
+app.delete(
+  "/campgrounds/:id/review/:reviewId",
+  catchAsync(async (req, res, next) => {
+    const { id, reviewId } = req.params;
+
+    await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+    await Review.findByIdAndDelete(reviewId);
+
     res.redirect(`/campgrounds/${id}`);
   })
 );
