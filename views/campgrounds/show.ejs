@@ -22,5 +22,27 @@
         2 days ago
       </div>
     </div>
+
+    <div class="container mt-1">
+      <h2>Submit a Review</h2>
+      <form action="/campgrounds/<%= campground._id %>/review" method="post">
+        <div class="form-group">
+          <label for="rating">Rating</label>
+          <select class="form-control" id="rating" required name="review[rating]">
+            <option value="" disabled selected>Select your rating</option>
+            <option value="1">1 - Poor</option>
+            <option value="2">2 - Fair</option>
+            <option value="3">3 - Good</option>
+            <option value="4">4 - Very Good</option>
+            <option value="5">5 - Excellent</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="comments">Comments</label>
+          <textarea class="form-control" id="comments" rows="3" placeholder="Enter your comments" required review[comment]></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary my-2">Submit</button>
+      </form>
+    </div>
   </div>
 </div>

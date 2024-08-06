@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-const { Schema } = mongoose;
+const { Schema, model } = mongoose;
 
 const ReviewSchema = new Schema({
-  body: String,
+  comment: String,
   rating: Number,
 });
 

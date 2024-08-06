@@ -6,6 +6,7 @@ import path from "path";
 
 //Models
 import Campground from "./models/campground.js";
+import Review from "./models/reviews.js";
 
 //Models Validator
 import { validate } from "./utils/validateSchema.js";
@@ -122,6 +123,19 @@ app.delete("/campgrounds/:id", async (req, res) => {
   await Campground.findByIdAndDelete(id);
   res.redirect("/campgrounds");
 });
+
+//Reviews
+app.post(
+  "/campgrounds/:id/review",
+  catchAsync(async (req, res, next) => {
+    const { id } = req.params;
+    const campground = await Campground.findById(id);
+    const review = new Review(req.body);
+
+    // campground.reviews.push(review);
+    res.redirect(`/campgrounds/${id}`);
+  })
+);
 
 //404 NOT FOUND
 app.all("*", (req, res) => {
